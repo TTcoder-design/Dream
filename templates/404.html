@@ -1,0 +1,51 @@
+<!--
+=============================================================================
+404 ERROR PAGE TEMPLATE
+=============================================================================
+This page is displayed when a user tries to access:
+- A video that doesn't exist
+- A page that doesn't exist
+It provides a friendly error message and links to navigate back.
+=============================================================================
+-->
+{% extends "base.html" %}
+
+{% block title %}Movie Not Found - CinemaHub{% endblock %}
+
+{% block content %}
+<!-- 
+=======================================================================
+ERROR MESSAGE SECTION
+=======================================================================
+Centered error message with helpful navigation options.
+-->
+<section class="error-section">
+    <div class="error-content">
+        <!-- Error icon -->
+        <div class="error-icon">
+            <i data-feather="alert-circle"></i>
+        </div>
+        
+        <!-- Error code -->
+        <h1 class="error-code">404</h1>
+        
+        <!-- Error message -->
+        <h2 class="error-title">Video Not Found</h2>
+        <p class="error-description">
+            Oops! The video you're looking for doesn't exist or has been removed.
+        </p>
+        
+        <!-- Navigation buttons -->
+        <div class="error-actions">
+            <a href="{{ url_for('videos') }}" class="btn btn-primary">
+                <i data-feather="film"></i>
+                <span>Browse Videos</span>
+            </a>
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">
+                <i data-feather="home"></i>
+                <span>Go Home</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,166 @@
+<!--
+=============================================================================
+VIDEOS LISTING PAGE TEMPLATE
+=============================================================================
+This page displays all available videos in a responsive grid layout.
+Features:
+- Search bar to find videos by title/description
+- Category filter dropdown
+- Video cards with thumbnails, titles, descriptions
+- Category badges on each card
+=============================================================================
+-->
+{% extends "base.html" %}
+
+{% block title %}Movies - CinemaHub - Stream Premium Films{% endblock %}
+
+{% block content %}
+<!-- 
+=======================================================================
+PAGE HEADER
+=======================================================================
+Section header with title and description.
+-->
+<section class="page-header">
+    <h1>Movie Collection</h1>
+    <p>Explore our extensive collection of premium films</p>
+</section>
+
+<!-- 
+=======================================================================
+SEARCH AND FILTER SECTION
+=======================================================================
+Search bar and category filter for finding videos.
+-->
+<section class="filter-section">
+    <form class="filter-form" action="{{ url_for('videos') }}" method="GET">
+        <!-- Search input -->
+        <div class="search-box">
+            <i data-feather="search"></i>
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search videos..." 
+                value="{{ search_query }}"
+                class="search-input"
+            >
+        </div>
+        
+        <!-- Category filter -->
+        <div class="category-filter">
+            <select name="category" class="category-select" onchange="this.form.submit()">
+                <option value="all" {% if current_category == 'all' %}selected{% endif %}>All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if current_category == cat.id %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Search button -->
+        <button type="submit" class="btn btn-primary btn-search">
+            <i data-feather="search"></i>
+            <span>Search</span>
+        </button>
+        
+        <!-- Clear filters link -->
+        {% if search_query or current_category != 'all' %}
+        <a href="{{ url_for('videos') }}" class="clear-filters">
+            <i data-feather="x"></i>
+            Clear Filters
+        </a>
+        {% endif %}
+    </form>
+</section>
+
+<!-- 
+=======================================================================
+RESULTS INFO
+=======================================================================
+Shows how many videos match the current filters.
+-->
+{% if search_query or current_category != 'all' %}
+<section class="results-info">
+    <p>
+        Showing {{ videos|length }} video{% if videos|length != 1 %}s{% endif %}
+        {% if search_query %}matching "{{ search_query }}"{% endif %}
+        {% if current_category != 'all' %}in {{ get_category_name(current_category) }}{% endif %}
+    </p>
+</section>
+{% endif %}
+
+<!-- 
+=======================================================================
+VIDEO GRID
+=======================================================================
+Responsive grid layout for video cards.
+- 1 column on mobile
+- 2 columns on tablet
+- 3 columns on desktop
+-->
+<section class="videos-section">
+    {% if videos %}
+    <div class="video-grid">
+        {% for video in videos %}
+        <!-- 
+        VIDEO CARD
+        Each card represents one video with all its information.
+        -->
+        <article class="video-card" data-video-id="{{ video.id }}">
+            <!-- Thumbnail container with duration badge -->
+            <div class="video-thumbnail">
+                <img 
+                    src="{{ video.thumbnail }}" 
+                    alt="Thumbnail for {{ video.title }}"
+                    loading="lazy"
+                >
+                <!-- Duration badge overlay -->
+                <span class="video-duration">{{ video.duration }}</span>
+                <!-- Category badge -->
+                <span class="video-category-badge">{{ get_category_name(video.category) }}</span>
+            </div>
+            
+            <!-- Video information -->
+            <div class="video-info">
+                <h3 class="video-title">{{ video.title }}</h3>
+                <p class="video-description">{{ video.description }}</p>
+                
+                <!-- Watch button - links to the video player page -->
+                <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch">
+                    <i data-feather="play-circle"></i>
+                    <span>Watch Now</span>
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- 
+    =======================================================================
+    EMPTY STATE
+    =======================================================================
+    Shown when there are no videos matching the current filters.
+    -->
+    <section class="empty-state">
+        <div class="empty-content">
+            <i data-feather="video-off"></i>
+            <h2>No Videos Found</h2>
+            <p>
+                {% if search_query or current_category != 'all' %}
+                No videos match your search criteria. Try adjusting your filters.
+                {% else %}
+                Check back soon for new animated content!
+                {% endif %}
+            </p>
+            {% if search_query or current_category != 'all' %}
+            <a href="{{ url_for('videos') }}" class="btn btn-secondary">
+                <i data-feather="refresh-cw"></i>
+                Clear Filters
+            </a>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}

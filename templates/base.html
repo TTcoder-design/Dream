@@ -1,0 +1,89 @@
+<!--
+=============================================================================
+BASE TEMPLATE
+=============================================================================
+This is the base template that all other pages extend.
+It contains the common HTML structure, navbar, and footer.
+All pages inherit from this template using Jinja2's extends feature.
+=============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags for proper rendering and mobile responsiveness -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Page title - can be overridden by child templates -->
+    <title>{% block title %}CinemaHub - Stream Your Favorite Movies{% endblock %}</title>
+    
+    <!-- Custom CSS stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Feather Icons for beautiful icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <!-- 
+    =======================================================================
+    NAVIGATION BAR
+    =======================================================================
+    The navbar is fixed at the top and contains the site logo and nav links.
+    On mobile, it shows a hamburger menu that can be toggled.
+    -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Site logo/brand - links to home page -->
+            <a href="{{ url_for('home') }}" class="nav-brand">
+                <i data-feather="play-circle"></i>
+                <span>CinemaHub</span>
+            </a>
+            
+            <!-- Mobile menu toggle button (hamburger icon) -->
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <i data-feather="menu"></i>
+            </button>
+            
+            <!-- Navigation links - hidden on mobile until toggled -->
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
+                <li><a href="{{ url_for('videos') }}" class="nav-link">Videos</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 
+    =======================================================================
+    MAIN CONTENT AREA
+    =======================================================================
+    This is where the page-specific content will be inserted.
+    Child templates define the 'content' block to add their content here.
+    -->
+    <main class="main-content">
+        {% block content %}
+        <!-- Page content goes here -->
+        {% endblock %}
+    </main>
+    
+    <!-- 
+    =======================================================================
+    FOOTER
+    =======================================================================
+    Simple footer with copyright information.
+    -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 CinemaHub - Your Premium Movie Streaming Platform</p>
+            <p class="footer-subtitle">Stream the best movies, anytime, anywhere</p>
+        </div>
+    </footer>
+    
+    <!-- Custom JavaScript file -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Initialize Feather Icons -->
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>

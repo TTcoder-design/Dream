@@ -1,0 +1,87 @@
+<!--
+=============================================================================
+HOME PAGE TEMPLATE
+=============================================================================
+This is the landing page of the website.
+It extends the base template and displays a hero section with:
+- Website name and tagline
+- Brief description
+- Call-to-action button to browse videos
+=============================================================================
+-->
+{% extends "base.html" %}
+
+{% block title %}Welcome - CinemaHub - Stream Your Favorite Movies{% endblock %}
+
+{% block content %}
+<!-- 
+=======================================================================
+HERO SECTION
+=======================================================================
+The main hero section with centered content.
+Uses flexbox for vertical and horizontal centering.
+-->
+<section class="hero">
+    <div class="hero-content">
+        <!-- Main heading with animation icon -->
+        <div class="hero-icon">
+            <i data-feather="film"></i>
+        </div>
+        
+        <h1 class="hero-title">CinemaHub</h1>
+        
+        <!-- Tagline/subtitle -->
+        <p class="hero-tagline">Stream Premium Movies in Your Home Theatre</p>
+        
+        <!-- Description text -->
+        <p class="hero-description">
+            Welcome to CinemaHub! Your ultimate destination for premium movie streaming. 
+            Discover thousands of films across all genres, from blockbuster action to intimate dramas. 
+            Stream in stunning quality and enjoy your favorite movies anytime, anywhere.
+        </p>
+        
+        <!-- Call-to-action button -->
+        <a href="{{ url_for('videos') }}" class="btn btn-primary">
+            <i data-feather="play"></i>
+            <span>Browse Videos</span>
+        </a>
+    </div>
+</section>
+
+<!-- 
+=======================================================================
+FEATURES SECTION
+=======================================================================
+A simple section highlighting what makes this platform special.
+-->
+<section class="features">
+    <div class="features-container">
+        <!-- Feature 1: Original Content -->
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i data-feather="star"></i>
+            </div>
+            <h3>Original Content</h3>
+            <p>Every animation is an original creation, crafted with care and imagination.</p>
+        </div>
+        
+        <!-- Feature 2: Stream Anywhere -->
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i data-feather="globe"></i>
+            </div>
+            <h3>Stream Anywhere</h3>
+            <p>Watch on any device - desktop, tablet, or mobile. No downloads required.</p>
+        </div>
+        
+        <!-- Feature 3: Free to Watch -->
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i data-feather="heart"></i>
+            </div>
+            <h3>Free to Watch</h3>
+            <p>All content is free to enjoy. Just sit back, relax, and watch.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

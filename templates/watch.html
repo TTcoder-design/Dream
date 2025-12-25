@@ -1,0 +1,175 @@
+<!--
+=============================================================================
+VIDEO PLAYER PAGE TEMPLATE
+=============================================================================
+This page displays a single video with:
+- Embedded video player (iframe for external videos)
+- Video title and full description
+- Category badge
+- Social sharing buttons
+- Back button to return to videos list
+=============================================================================
+-->
+{% extends "base.html" %}
+
+{% block title %}{{ video.title }} - CinemaHub - Movie Streaming{% endblock %}
+
+{% block content %}
+<!-- 
+=======================================================================
+VIDEO PLAYER SECTION
+=======================================================================
+The main video player area with responsive iframe.
+The iframe maintains a 16:9 aspect ratio.
+-->
+<section class="watch-section">
+    <!-- Back navigation link -->
+    <a href="{{ url_for('videos') }}" class="back-link">
+        <i data-feather="arrow-left"></i>
+        <span>Back to Videos</span>
+    </a>
+    
+    <!-- Video player container - with loading handler -->
+    <div class="video-player" id="videoPlayer">
+        <div class="video-loading" id="videoLoading" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: absolute; background: var(--bg-secondary); border-radius: 12px;">
+            <div style="text-align: center; color: var(--text-secondary);">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                <p>Loading video...</p>
+            </div>
+        </div>
+        <iframe 
+            id="videoFrame"
+            src="{{ video.video_url }}"
+            allowfullscreen
+            allow="autoplay"
+            style="display: none;">
+        </iframe>
+    </div>
+    
+    <div style="background: var(--bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-lg); margin-bottom: var(--spacing-lg);">
+        <p style="color: var(--text-tertiary); font-size: 0.875rem; margin: 0;">
+            <strong>Note:</strong> Video quality is based on the uploaded file. For best experience, ensure your video is uploaded in high quality to Google Drive.
+        </p>
+    </div>
+    
+    <!-- Video information section -->
+    <div class="video-details">
+        <h1 class="video-page-title">{{ video.title }}</h1>
+        
+        <!-- Meta information (duration, category) -->
+        <div class="video-meta">
+            <span class="meta-item">
+                <i data-feather="clock"></i>
+                {{ video.duration }}
+            </span>
+            <span class="meta-item category-tag">
+                <i data-feather="tag"></i>
+                {{ category_name }}
+            </span>
+        </div>
+        
+        <!-- Social sharing buttons -->
+        <div class="share-section">
+            <h3 class="share-title">Share this video:</h3>
+            <div class="share-buttons" id="shareButtons" data-url="{{ request.url }}" data-title="{{ video.title }}">
+                <!-- Twitter/X Share -->
+                <a href="#" 
+                   class="share-btn share-twitter"
+                   title="Share on Twitter"
+                   onclick="shareOnTwitter(event)">
+                    <i data-feather="twitter"></i>
+                </a>
+                
+                <!-- Facebook Share -->
+                <a href="#" 
+                   class="share-btn share-facebook"
+                   title="Share on Facebook"
+                   onclick="shareOnFacebook(event)">
+                    <i data-feather="facebook"></i>
+                </a>
+                
+                <!-- LinkedIn Share -->
+                <a href="#" 
+                   class="share-btn share-linkedin"
+                   title="Share on LinkedIn"
+                   onclick="shareOnLinkedIn(event)">
+                    <i data-feather="linkedin"></i>
+                </a>
+                
+                <!-- Copy Link -->
+                <button class="share-btn share-copy" 
+                        onclick="copyVideoLink()"
+                        title="Copy link">
+                    <i data-feather="link"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Full video description -->
+        <div class="video-full-description">
+            <h2>About This Video</h2>
+            <p>{{ video.description }}</p>
+        </div>
+    </div>
+</section>
+
+<script>
+// Handle video player loading
+document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.getElementById('videoFrame');
+    const loading = document.getElementById('videoLoading');
+    
+    // Show iframe after a short delay to ensure Google Drive loads
+    setTimeout(function() {
+        loading.style.display = 'none';
+        iframe.style.display = 'block';
+    }, 1500);
+    
+    // Refresh iframe if it fails to load properly
+    iframe.addEventListener('error', function() {
+        console.log('Iframe loading issue detected, refreshing...');
+        setTimeout(function() {
+            iframe.src = iframe.src; // Trigger reload
+        }, 500);
+    });
+});
+
+function getShareData() {
+    const container = document.getElementById('shareButtons');
+    return {
+        url: container.getAttribute('data-url'),
+        title: container.getAttribute('data-title')
+    };
+}
+
+function shareOnTwitter(event) {
+    event.preventDefault();
+    const data = getShareData();
+    const twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(data.title) + '&url=' + encodeURIComponent(data.url);
+    window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+}
+
+function shareOnFacebook(event) {
+    event.preventDefault();
+    const data = getShareData();
+    const fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(data.url);
+    window.open(fbUrl, '_blank', 'noopener,noreferrer');
+}
+
+function shareOnLinkedIn(event) {
+    event.preventDefault();
+    const data = getShareData();
+    const linkedInUrl = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(data.url) + '&title=' + encodeURIComponent(data.title);
+    window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
+}
+
+function copyVideoLink() {
+    const data = getShareData();
+    navigator.clipboard.writeText(data.url).then(function() {
+        alert('Link copied to clipboard!');
+    }, function() {
+        alert('Failed to copy link.');
+    });
+}
+</script>
+{% endblock %}

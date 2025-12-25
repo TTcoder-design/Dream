@@ -1,0 +1,146 @@
+<!--
+=============================================================================
+ADMIN VIDEO FORM TEMPLATE
+=============================================================================
+Form for adding or editing video metadata.
+Used by both /admin/add and /admin/edit routes.
+=============================================================================
+-->
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Movie - Admin - CinemaHub{% endblock %}
+
+{% block content %}
+<!-- 
+=======================================================================
+FORM HEADER
+=======================================================================
+Page header with title and back link.
+-->
+<section class="admin-form-header">
+    <a href="{{ url_for('admin') }}" class="back-link">
+        <i data-feather="arrow-left"></i>
+        <span>Back to Admin</span>
+    </a>
+    <h1>{{ action }} Video</h1>
+    <p>{% if action == 'Add' %}Add a new video to your collection{% else %}Update video information{% endif %}</p>
+</section>
+
+<!-- 
+=======================================================================
+VIDEO FORM
+=======================================================================
+Form with all video fields.
+-->
+<section class="admin-form-section">
+    {% if error %}
+    <div class="form-error-banner">
+        <i data-feather="alert-circle"></i>
+        <span>{{ error }}</span>
+    </div>
+    {% endif %}
+    
+    <div class="demo-notice">
+        <i data-feather="info"></i>
+        <span>This is a demo. Changes are stored in memory and will reset when the server restarts.</span>
+    </div>
+    
+    <form class="admin-form" method="POST">
+        <!-- Title field -->
+        <div class="form-group">
+            <label for="title">Video Title *</label>
+            <input 
+                type="text" 
+                id="title" 
+                name="title" 
+                required
+                placeholder="Enter video title"
+                value="{{ video.title if video else '' }}"
+            >
+        </div>
+        
+        <!-- Description field -->
+        <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                required
+                rows="4"
+                placeholder="Enter video description"
+            >{{ video.description if video else '' }}</textarea>
+        </div>
+        
+        <!-- Category field -->
+        <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="category" required>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" 
+                        {% if video and video.category == cat.id %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Thumbnail URL field -->
+        <div class="form-group">
+            <label for="thumbnail">Thumbnail URL *</label>
+            <input 
+                type="url" 
+                id="thumbnail" 
+                name="thumbnail" 
+                required
+                placeholder="https://example.com/thumbnail.jpg"
+                value="{{ video.thumbnail if video else '' }}"
+            >
+            <small class="form-hint">Enter the URL of the thumbnail image (16:9 aspect ratio recommended)</small>
+        </div>
+        
+        <!-- Movie Embed URL field -->
+        <div class="form-group">
+            <label for="video_url">Movie Embed URL (Google Drive) *</label>
+            <input 
+                type="url" 
+                id="video_url" 
+                name="video_url" 
+                required
+                placeholder="https://drive.google.com/file/d/FILE_ID/preview"
+                value="{{ video.video_url if video else '' }}"
+            >
+            <small class="form-hint">
+                <strong>Google Drive only:</strong> Use embed format: https://drive.google.com/file/d/FILE_ID/preview
+                <br>To get FILE_ID: Share the file on Drive, copy link, extract ID from: https://drive.google.com/file/d/FILE_ID/view
+            </small>
+        </div>
+        
+        <!-- Duration field -->
+        <div class="form-group">
+            <label for="duration">Duration *</label>
+            <input 
+                type="text" 
+                id="duration" 
+                name="duration" 
+                required
+                placeholder="5:30"
+                pattern="[0-9]+:[0-5][0-9]"
+                value="{{ video.duration if video else '' }}"
+            >
+            <small class="form-hint">Format: MM:SS (e.g., 5:30, 12:45)</small>
+        </div>
+        
+        <!-- Form actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i data-feather="save"></i>
+                <span>{{ action }} Video</span>
+            </button>
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                <i data-feather="x"></i>
+                <span>Cancel</span>
+            </a>
+        </div>
+    </form>
+</section>
+{% endblock %}
