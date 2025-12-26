@@ -15,7 +15,7 @@ All pages inherit from this template using Jinja2's extends feature.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Page title - can be overridden by child templates -->
-    <title>{% block title %}CinemaHub - Stream Your Favorite Movies{% endblock %}</title>
+    <title>{% block title %}homoflixcinema - Stream Your Favorite Movies{% endblock %}</title>
     
     <!-- Custom CSS stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -36,8 +36,13 @@ All pages inherit from this template using Jinja2's extends feature.
             <!-- Site logo/brand - links to home page -->
             <a href="{{ url_for('home') }}" class="nav-brand">
                 <i data-feather="play-circle"></i>
-                <span>CinemaHub</span>
+                <span>homoflixcinema</span>
             </a>
+            
+            <!-- Advertisement banner -->
+            <div class="ad-banner">
+                <span>📧 For advertisement: <a href="mailto:charlottepembroke6@gmail.com">charlottepembroke6@gmail.com</a></span>
+            </div>
             
             <!-- Mobile menu toggle button (hamburger icon) -->
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -73,7 +78,7 @@ All pages inherit from this template using Jinja2's extends feature.
     -->
     <footer class="footer">
         <div class="footer-container">
-            <p>&copy; 2025 CinemaHub - Your Premium Movie Streaming Platform</p>
+            <p>&copy; 2025 homoflixcinema - Your Premium Movie Streaming Platform</p>
             <p class="footer-subtitle">Stream the best movies, anytime, anywhere</p>
         </div>
     </footer>
@@ -81,9 +86,47 @@ All pages inherit from this template using Jinja2's extends feature.
     <!-- Custom JavaScript file -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
+    <!-- Advertisement Popup Modal -->
+    <div id="adPopup" class="popup-overlay">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeAdPopup()">&times;</button>
+            <div class="popup-icon">📧</div>
+            <h2>Advertise With Us</h2>
+            <p>For advertisement on this website, please contact:</p>
+            <a href="mailto:charlottepembroke6@gmail.com" class="popup-email">charlottepembroke6@gmail.com</a>
+        </div>
+    </div>
+    
     <!-- Initialize Feather Icons -->
     <script>
         feather.replace();
+        
+        // Show popup on page load
+        window.addEventListener('load', function() {
+            const popup = document.getElementById('adPopup');
+            const hasSeenPopup = sessionStorage.getItem('hasSeenAdPopup');
+            
+            if (!hasSeenPopup) {
+                setTimeout(function() {
+                    popup.style.display = 'flex';
+                }, 500);
+            }
+        });
+        
+        // Close popup function
+        function closeAdPopup() {
+            const popup = document.getElementById('adPopup');
+            popup.style.display = 'none';
+            sessionStorage.setItem('hasSeenAdPopup', 'true');
+        }
+        
+        // Close on outside click
+        window.addEventListener('click', function(e) {
+            const popup = document.getElementById('adPopup');
+            if (e.target === popup) {
+                closeAdPopup();
+            }
+        });
     </script>
 </body>
 </html>

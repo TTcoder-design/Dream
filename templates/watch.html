@@ -12,7 +12,7 @@ This page displays a single video with:
 -->
 {% extends "base.html" %}
 
-{% block title %}{{ video.title }} - CinemaHub - Movie Streaming{% endblock %}
+{% block title %}{{ video.title }} - homoflixcinema - Movie Streaming{% endblock %}
 
 {% block content %}
 <!-- 
@@ -37,13 +37,14 @@ The iframe maintains a 16:9 aspect ratio.
                 <p>Loading video...</p>
             </div>
         </div>
-        <iframe 
-            id="videoFrame"
-            src="{{ video.video_url }}"
-            allowfullscreen
-            allow="autoplay"
-            style="display: none;">
-        </iframe>
+        <!-- Fit/Fill toggle -->
+        <button id="fitToggle" class="fit-toggle" title="Toggle Fit/Fill">Fill</button>
+        <video 
+            id="videoElement"
+            controls
+            width="100%"
+            style="display: none; width: 100%; height: 100%; border-radius: 12px; background: #000;">
+        </video>
     </div>
     
     <div style="background: var(--bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-lg); margin-bottom: var(--spacing-lg);">
@@ -66,6 +67,14 @@ The iframe maintains a 16:9 aspect ratio.
                 <i data-feather="tag"></i>
                 {{ category_name }}
             </span>
+            {% if video.tags %}
+            <span class="meta-item category-tag">
+                <i data-feather="tag"></i>
+                {% for tag in video.tags %}
+                    {{ get_category_name(tag) }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </span>
+            {% endif %}
         </div>
         
         <!-- Social sharing buttons -->
@@ -113,24 +122,107 @@ The iframe maintains a 16:9 aspect ratio.
     </div>
 </section>
 
+<!-- HLS.js Library for .m3u8 streaming -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
 <script>
-// Handle video player loading
+// Handle video player loading with HLS.js
+function applyAspectRatioFromMetadata(videoEl, containerEl) {
+    if (!videoEl || !containerEl) return;
+    const w = videoEl.videoWidth || 16;
+    const h = videoEl.videoHeight || 9;
+    if (w > 0 && h > 0) {
+        const ratio = `${w} / ${h}`;
+        console.log('Setting player aspect-ratio to', ratio);
+        containerEl.style.aspectRatio = ratio;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    const iframe = document.getElementById('videoFrame');
+    const video = document.getElementById('videoElement');
     const loading = document.getElementById('videoLoading');
+    const videoSrc = '{{ video.video_url }}';
+    const player = document.getElementById('videoPlayer');
+    const fitToggle = document.getElementById('fitToggle');
     
-    // Show iframe after a short delay to ensure Google Drive loads
-    setTimeout(function() {
+    console.log('Loading video:', videoSrc);
+    
+    // Check if it's an HLS stream (.m3u8)
+    if (videoSrc.includes('.m3u8')) {
+        if (Hls.isSupported()) {
+            console.log('HLS.js is supported, initializing...');
+            const hls = new Hls({
+                debug: true,
+                enableWorker: true,
+                lowLatencyMode: true,
+            });
+            
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                console.log('HLS manifest loaded, video ready to play');
+                loading.style.display = 'none';
+                video.style.display = 'block';
+                if (video.readyState >= 1) {
+                    applyAspectRatioFromMetadata(video, player);
+                } else {
+                    video.addEventListener('loadedmetadata', function() {
+                        applyAspectRatioFromMetadata(video, player);
+                    }, { once: true });
+                }
+            });
+            
+            hls.on(Hls.Events.ERROR, function(event, data) {
+                console.error('HLS Error:', data);
+                if (data.fatal) {
+                    switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.log('Network error, trying to recover...');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.log('Media error, trying to recover...');
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            console.log('Fatal error, cannot recover');
+                            loading.innerHTML = '<div style="text-align: center; color: var(--color-error);"><div style="font-size: 2rem; margin-bottom: 1rem;">❌</div><p>Video playback error. The stream may be protected or unavailable.</p></div>';
+                            break;
+                    }
+                }
+            });
+        } 
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Native HLS support (Safari)
+            console.log('Native HLS support detected');
+            video.src = videoSrc;
+            loading.style.display = 'none';
+            video.style.display = 'block';
+            video.addEventListener('loadedmetadata', function() {
+                applyAspectRatioFromMetadata(video, player);
+            }, { once: true });
+        }
+        else {
+            console.error('HLS not supported on this browser');
+            loading.innerHTML = '<div style="text-align: center; color: var(--color-error);"><div style="font-size: 2rem; margin-bottom: 1rem;">❌</div><p>Your browser does not support HLS streaming.</p></div>';
+        }
+    } else {
+        // Regular video (MP4, etc.)
+        console.log('Regular video source, using standard player');
+        video.src = videoSrc;
         loading.style.display = 'none';
-        iframe.style.display = 'block';
-    }, 1500);
-    
-    // Refresh iframe if it fails to load properly
-    iframe.addEventListener('error', function() {
-        console.log('Iframe loading issue detected, refreshing...');
-        setTimeout(function() {
-            iframe.src = iframe.src; // Trigger reload
-        }, 500);
+        video.style.display = 'block';
+        video.addEventListener('loadedmetadata', function() {
+            applyAspectRatioFromMetadata(video, player);
+        }, { once: true });
+    }
+
+    // Toggle Fit/Fill behavior
+    fitToggle.addEventListener('click', function() {
+        const isFill = video.classList.toggle('fill-mode');
+        fitToggle.textContent = isFill ? 'Fit' : 'Fill';
+        fitToggle.title = isFill ? 'Show entire video' : 'Fill frame';
     });
 });
 
