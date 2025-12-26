@@ -12,7 +12,7 @@ Features:
 -->
 {% extends "base.html" %}
 
-{% block title %}Movies - CinemaHub - Stream Premium Films{% endblock %}
+{% block title %}Movies - homoflixcinema - Stream Premium Films{% endblock %}
 
 {% block content %}
 <!-- 
@@ -101,35 +101,46 @@ Responsive grid layout for video cards.
 -->
 <section class="videos-section">
     {% if videos %}
-    <div class="video-grid">
+    <div class="movies-grid">
         {% for video in videos %}
         <!-- 
         VIDEO CARD
         Each card represents one video with all its information.
         -->
-        <article class="video-card" data-video-id="{{ video.id }}">
+        <article class="movie-card" data-video-id="{{ video.id }}">
             <!-- Thumbnail container with duration badge -->
-            <div class="video-thumbnail">
+            <div class="movie-card-image">
                 <img 
                     src="{{ video.thumbnail }}" 
                     alt="Thumbnail for {{ video.title }}"
                     loading="lazy"
                 >
-                <!-- Duration badge overlay -->
-                <span class="video-duration">{{ video.duration }}</span>
-                <!-- Category badge -->
-                <span class="video-category-badge">{{ get_category_name(video.category) }}</span>
+                <!-- Play button overlay -->
+                <div class="movie-card-overlay">
+                    <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch-small">
+                        <i data-feather="play"></i>
+                    </a>
+                </div>
             </div>
             
             <!-- Video information -->
-            <div class="video-info">
-                <h3 class="video-title">{{ video.title }}</h3>
-                <p class="video-description">{{ video.description }}</p>
+            <div class="movie-card-content">
+                <h3 class="movie-card-title">{{ video.title }}</h3>
+                <div class="movie-card-tags">
+                    {% if video.tags %}
+                        {% for tag in video.tags %}
+                        <span class="tag-small">{{ get_category_name(tag) }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="tag-small">{{ get_category_name(video.category) }}</span>
+                    {% endif %}
+                    <span class="tag-small">{{ video.duration }}</span>
+                </div>
+                <p class="movie-card-description">{{ video.description[:100] }}...</p>
                 
                 <!-- Watch button - links to the video player page -->
-                <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch">
-                    <i data-feather="play-circle"></i>
-                    <span>Watch Now</span>
+                <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch-full">
+                    Watch Now
                 </a>
             </div>
         </article>

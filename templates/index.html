@@ -1,87 +1,232 @@
 <!--
 =============================================================================
-HOME PAGE TEMPLATE
+HOME PAGE TEMPLATE - STREAMING INTERFACE
 =============================================================================
-This is the landing page of the website.
-It extends the base template and displays a hero section with:
-- Website name and tagline
-- Brief description
-- Call-to-action button to browse videos
+Modern streaming website with header, search, and movie carousel slider.
+Features:
+- Professional header with logo and search bar
+- Movie carousel displaying content
+- Movie cards with tags and metadata
 =============================================================================
 -->
 {% extends "base.html" %}
 
-{% block title %}Welcome - CinemaHub - Stream Your Favorite Movies{% endblock %}
+{% block title %}homoflixcinema - Stream Premium Movies{% endblock %}
 
 {% block content %}
+
 <!-- 
 =======================================================================
-HERO SECTION
+HERO SECTION WITH SEARCH
 =======================================================================
-The main hero section with centered content.
-Uses flexbox for vertical and horizontal centering.
+Full-width hero with search functionality and featured content
 -->
-<section class="hero">
-    <div class="hero-content">
-        <!-- Main heading with animation icon -->
-        <div class="hero-icon">
-            <i data-feather="film"></i>
+<section class="hero-search">
+    <div class="hero-search-content">
+        <h1 class="hero-search-title">Welcome to homoflixcinema</h1>
+        <p class="hero-search-subtitle">Discover Premium Movies</p>
+        
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <form action="{{ url_for('videos') }}" method="GET" class="search-form">
+                <div class="search-input-wrapper">
+                    <i data-feather="search"></i>
+                    <input 
+                        type="text" 
+                        name="search" 
+                        placeholder="Search movies by title..." 
+                        class="search-input-large"
+                    >
+                    <button type="submit" class="search-btn">Search</button>
+                </div>
+            </form>
         </div>
-        
-        <h1 class="hero-title">CinemaHub</h1>
-        
-        <!-- Tagline/subtitle -->
-        <p class="hero-tagline">Stream Premium Movies in Your Home Theatre</p>
-        
-        <!-- Description text -->
-        <p class="hero-description">
-            Welcome to CinemaHub! Your ultimate destination for premium movie streaming. 
-            Discover thousands of films across all genres, from blockbuster action to intimate dramas. 
-            Stream in stunning quality and enjoy your favorite movies anytime, anywhere.
-        </p>
-        
-        <!-- Call-to-action button -->
-        <a href="{{ url_for('videos') }}" class="btn btn-primary">
-            <i data-feather="play"></i>
-            <span>Browse Videos</span>
-        </a>
     </div>
 </section>
 
 <!-- 
 =======================================================================
-FEATURES SECTION
+FEATURED CAROUSEL SECTION
 =======================================================================
-A simple section highlighting what makes this platform special.
+Movie carousel that displays movies repeatedly
 -->
-<section class="features">
-    <div class="features-container">
-        <!-- Feature 1: Original Content -->
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i data-feather="star"></i>
-            </div>
-            <h3>Original Content</h3>
-            <p>Every animation is an original creation, crafted with care and imagination.</p>
+<section class="featured-section">
+    <div class="section-header">
+        <h2>Featured Movies</h2>
+        <div class="carousel-controls">
+            <button class="carousel-btn prev-btn" id="prevBtn" aria-label="Previous">
+                <i data-feather="chevron-left"></i>
+            </button>
+            <button class="carousel-btn next-btn" id="nextBtn" aria-label="Next">
+                <i data-feather="chevron-right"></i>
+            </button>
         </div>
-        
-        <!-- Feature 2: Stream Anywhere -->
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i data-feather="globe"></i>
-            </div>
-            <h3>Stream Anywhere</h3>
-            <p>Watch on any device - desktop, tablet, or mobile. No downloads required.</p>
-        </div>
-        
-        <!-- Feature 3: Free to Watch -->
-        <div class="feature-card">
-            <div class="feature-icon">
-                <i data-feather="heart"></i>
-            </div>
-            <h3>Free to Watch</h3>
-            <p>All content is free to enjoy. Just sit back, relax, and watch.</p>
+    </div>
+    
+    <!-- Carousel Container -->
+    <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+            <!-- Movies will be displayed here -->
+            {% for i in range(6) %}
+                {% for video in videos %}
+                <div class="carousel-item">
+                    <div class="carousel-movie">
+                        <img 
+                            src="{{ video.thumbnail }}" 
+                            alt="{{ video.title }}"
+                            class="carousel-poster"
+                        >
+                        <div class="carousel-overlay">
+                            <div class="carousel-info">
+                                <h3>{{ video.title }}</h3>
+                                <div class="movie-tags">
+                                    {% if video.tags %}
+                                        {% for tag in video.tags %}
+                                        <span class="tag">{{ get_category_name(tag) }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="tag">{{ get_category_name(video.category) }}</span>
+                                    {% endif %}
+                                    <span class="tag duration">{{ video.duration }}</span>
+                                </div>
+                                <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-play">
+                                    <i data-feather="play-circle"></i>
+                                    <span>Watch Now</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </section>
+
+<!-- 
+=======================================================================
+MOVIES GRID SECTION
+=======================================================================
+Grid display of all available movies with tags
+-->
+<section class="movies-grid-section">
+    <div class="section-header">
+        <h2>All Movies</h2>
+    </div>
+    
+    <div class="movies-grid">
+        {% for video in videos %}
+        <div class="movie-card">
+            <div class="movie-card-image">
+                <img 
+                    src="{{ video.thumbnail }}" 
+                    alt="{{ video.title }}"
+                >
+                <div class="movie-card-overlay">
+                    <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch-small">
+                        <i data-feather="play"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="movie-card-content">
+                <h3 class="movie-card-title">{{ video.title }}</h3>
+                <div class="movie-card-tags">
+                    {% if video.tags %}
+                        {% for tag in video.tags %}
+                        <span class="tag-small">{{ get_category_name(tag) }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="tag-small">{{ get_category_name(video.category) }}</span>
+                    {% endif %}
+                    <span class="tag-small">{{ video.duration }}</span>
+                </div>
+                <p class="movie-card-description">{{ video.description[:100] }}...</p>
+                <a href="{{ url_for('watch', video_id=video.id) }}" class="btn btn-watch-full">
+                    Watch Now
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    // Carousel auto-play functionality
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselContainer = document.querySelector('.carousel-container');
+    
+    let currentPosition = 0;
+    const itemWidth = 420; // Width of each carousel item + gap
+    let autoPlayInterval;
+    const autoPlayDelay = 7000; // 7 seconds delay for slower, smoother transitions
+    
+    console.log('Carousel initialized:', { itemWidth, autoPlayDelay, totalItems: carouselTrack.children.length });
+    
+    // Function to move carousel
+    function moveCarousel(direction) {
+        if (direction === 'next') {
+            currentPosition -= itemWidth;
+            if (Math.abs(currentPosition) > (carouselTrack.children.length - 1) * itemWidth) {
+                currentPosition = 0;
+            }
+        } else if (direction === 'prev') {
+            currentPosition += itemWidth;
+            if (currentPosition > 0) {
+                currentPosition = -((carouselTrack.children.length - 1) * itemWidth);
+            }
+        }
+        updateCarouselPosition();
+        console.log('Carousel moved to position:', currentPosition);
+    }
+    
+    function updateCarouselPosition() {
+        carouselTrack.style.transform = `translateX(${currentPosition}px)`;
+    }
+    
+    // Auto-play function
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(() => {
+            moveCarousel('next');
+        }, autoPlayDelay);
+        console.log('Auto-play started');
+    }
+    
+    // Stop auto-play
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+        console.log('Auto-play stopped');
+    }
+    
+    // Reset auto-play timer
+    function resetAutoPlay() {
+        stopAutoPlay();
+        startAutoPlay();
+    }
+    
+    // Next button click
+    nextBtn.addEventListener('click', () => {
+        moveCarousel('next');
+        resetAutoPlay();
+    });
+    
+    // Previous button click
+    prevBtn.addEventListener('click', () => {
+        moveCarousel('prev');
+        resetAutoPlay();
+    });
+    
+    // Pause on hover
+    carouselContainer.addEventListener('mouseenter', () => {
+        stopAutoPlay();
+    });
+    carouselContainer.addEventListener('mouseleave', () => {
+        startAutoPlay();
+    });
+    
+    // Start auto-play on page load
+    startAutoPlay();
+</script>
+
 {% endblock %}
