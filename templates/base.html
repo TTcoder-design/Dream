@@ -44,15 +44,11 @@ All pages inherit from this template using Jinja2's extends feature.
                 <span>📧 For advertisement: <a href="mailto:charlottepembroke6@gmail.com">charlottepembroke6@gmail.com</a></span>
             </div>
             
-            <!-- Mobile menu toggle button (hamburger icon) -->
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-                <i data-feather="menu"></i>
-            </button>
+            <!-- Mobile menu toggle removed as single-page navigation -->
             
             <!-- Navigation links - hidden on mobile until toggled -->
             <ul class="nav-menu" id="navMenu">
                 <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
-                <li><a href="{{ url_for('videos') }}" class="nav-link">Videos</a></li>
             </ul>
         </div>
     </nav>

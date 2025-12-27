@@ -24,9 +24,9 @@ The iframe maintains a 16:9 aspect ratio.
 -->
 <section class="watch-section">
     <!-- Back navigation link -->
-    <a href="{{ url_for('videos') }}" class="back-link">
+    <a href="{{ url_for('home') }}" class="back-link">
         <i data-feather="arrow-left"></i>
-        <span>Back to Videos</span>
+        <span>Back to Home</span>
     </a>
     
     <!-- Video player container - with loading handler -->
@@ -47,9 +47,12 @@ The iframe maintains a 16:9 aspect ratio.
         </video>
     </div>
     
-    <div style="background: var(--bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-lg); margin-bottom: var(--spacing-lg);">
-        <p style="color: var(--text-tertiary); font-size: 0.875rem; margin: 0;">
-            <strong>Note:</strong> Video quality is based on the uploaded file. For best experience, ensure your video is uploaded in high quality.
+    <div style="background: var(--bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-lg); margin-bottom: var(--spacing-lg); display: grid; gap: var(--spacing-sm);">
+        <p style="color: var(--text-tertiary); font-size: 0.9rem; margin: 0;">
+            <strong>Note 1:</strong> Video may take up to 10 seconds to start loading.
+        </p>
+        <p style="color: var(--text-tertiary); font-size: 0.9rem; margin: 0;">
+            <strong>Note 2:</strong> Video quality is based on the uploaded file. For best experience, ensure your video is uploaded in high quality.
         </p>
     </div>
     

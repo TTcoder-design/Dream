@@ -223,12 +223,17 @@ def home():
     It displays a welcome message and a button to browse videos.
     Both "/" and "/home" routes point to this function.
     """
-    videos = get_all_videos()
+    # Support search from Home to keep single-page UX
+    search_query = request.args.get("search", "").strip()
+    category = request.args.get("category", "all")
+    videos = filter_videos(search_query, category)
     categories = get_all_categories()
     return render_template(
         "index.html",
         videos=videos,
         categories=categories,
+        current_category=category,
+        search_query=search_query,
         get_category_name=get_category_name
     )
 

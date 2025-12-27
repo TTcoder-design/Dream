@@ -28,7 +28,7 @@ Full-width hero with search functionality and featured content
         
         <!-- Search Bar -->
         <div class="search-bar-container">
-            <form action="{{ url_for('videos') }}" method="GET" class="search-form">
+            <form action="{{ url_for('home') }}" method="GET" class="search-form">
                 <div class="search-input-wrapper">
                     <i data-feather="search"></i>
                     <input 
@@ -36,13 +36,24 @@ Full-width hero with search functionality and featured content
                         name="search" 
                         placeholder="Search movies by title..." 
                         class="search-input-large"
+                        value="{{ search_query }}"
                     >
+                    <select name="category" class="category-select search-category-select">
+                        <option value="all" {% if current_category == 'all' %}selected{% endif %}>All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if current_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
                     <button type="submit" class="search-btn">Search</button>
+                    {% if search_query or current_category != 'all' %}
+                    <a href="{{ url_for('home') }}" class="clear-filters">Clear</a>
+                    {% endif %}
                 </div>
             </form>
         </div>
     </div>
 </section>
+
 
 <!-- 
 =======================================================================
@@ -160,7 +171,7 @@ Grid display of all available movies with tags
     let currentPosition = 0;
     const itemWidth = 420; // Width of each carousel item + gap
     let autoPlayInterval;
-    const autoPlayDelay = 7000; // 7 seconds delay for slower, smoother transitions
+    const autoPlayDelay = 3000; // Faster auto-play for compact mobile slider
     
     console.log('Carousel initialized:', { itemWidth, autoPlayDelay, totalItems: carouselTrack.children.length });
     
