@@ -131,7 +131,7 @@ VIDEOS = {
         "description": "Set in Tokyo during the rainy season, the story follows Takao Akizuki, a 15-year-old high school student who dreams of becoming a professional shoemaker. On rainy mornings, he skips his first class to sketch shoe designs in a quiet, lush Japanese garden (Shinjuku Gyoen). There, he repeatedly encounters Yukari Yukino, a mysterious 27-year-old woman who is also avoiding her responsibilities—spending her mornings in the park drinking beer and eating chocolate. Without knowing each other's names or backgrounds, they develop a bond through their shared solitude and a mutual appreciation for the rain. As the rainy season begins to end, they must confront the realities of their lives and the difficult paths they are \"walking\" on.",
         "thumbnail": "/static/images/the gardon of words.jpg",
         "video_url": "/stream/6",
-        "original_url": "https://cdndirector.dailymotion.com/cdn/manifest/video/x8u432s.m3u8?sec=502Kyoh6MNl_bn9A6fFaOG0OwfypL2abtUZWStutSJ5yK3jtcF35kkf9f-TatzL8mWYvhak60uBeFVPwql4O5j-0zUJh98cGbpANdg_slkuVrFb-1gd5CRsvSIu7xKrg&dmTs=431485&dmV1st=00e043a3-aa7f-4841-89ec-25f2d5e787cd",
+        "original_url": "https://vod3.cf.dmcdn.net/sec2(Zr9DoYUWJeij6YQPEr0zEvM7ADz6POUZKYSCc4uDmPndzwgNRpCT_iAx7m9ZQGDvb4XlmJ_5pZn6macT1t0VB9T5YvmSgggyvoeM4OUt8WPgn8Ql_2N38sP4RwtlsFrAVt6vqaMM7T2JugRgLm3zzc-rTgD2-qsx0HjkQBrjML8wAHP-N90QVVz_3UNpg4cz)/video/005/803/534308500_mp4_h264_aac_hq_7.m3u8",
         "duration": "0:46:00",
         "category": "drama",
         "tags": ["drama", "romance", "adventure"]
