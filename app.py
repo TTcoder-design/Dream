@@ -124,6 +124,17 @@ VIDEOS = {
         "duration": "2:28:00",
         "category": "scifi",
         "tags": ["scifi", "action", "thriller", "mystery"]
+    },
+    "6": {
+        "id": "6",
+        "title": "The Garden of Words",
+        "description": "Set in Tokyo during the rainy season, the story follows Takao Akizuki, a 15-year-old high school student who dreams of becoming a professional shoemaker. On rainy mornings, he skips his first class to sketch shoe designs in a quiet, lush Japanese garden (Shinjuku Gyoen). There, he repeatedly encounters Yukari Yukino, a mysterious 27-year-old woman who is also avoiding her responsibilities—spending her mornings in the park drinking beer and eating chocolate. Without knowing each other's names or backgrounds, they develop a bond through their shared solitude and a mutual appreciation for the rain. As the rainy season begins to end, they must confront the realities of their lives and the difficult paths they are \"walking\" on.",
+        "thumbnail": "/static/images/the gardon of words.jpg",
+        "video_url": "/stream/6",
+        "original_url": "https://cdndirector.dailymotion.com/cdn/manifest/video/x8u432s.m3u8?sec=502Kyoh6MNl_bn9A6fFaOG0OwfypL2abtUZWStutSJ5yK3jtcF35kkf9f-TatzL8mWYvhak60uBeFVPwql4O5j-0zUJh98cGbpANdg_slkuVrFb-1gd5CRsvSIu7xKrg&dmTs=431485&dmV1st=00e043a3-aa7f-4841-89ec-25f2d5e787cd",
+        "duration": "0:46:00",
+        "category": "drama",
+        "tags": ["drama", "romance", "adventure"]
     }
 }
 
