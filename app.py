@@ -641,5 +641,28 @@ def page_not_found(error):
     return render_template("404.html"), 404
 
 # =============================================================================
+# MAIN ENTRY POINT
+# =============================================================================
+
+if __name__ == '__main__':
+    """
+    Main entry point for the Flask application.
+    
+    In production (Azure), the app is run by Gunicorn, not this block.
+    In development, this allows running with 'python app.py'.
+    
+    Azure automatically sets the PORT environment variable.
+    """
+    # Get port from environment variable or default to 8000
+    port = int(os.environ.get('PORT', 8000))
+    
+    # Run the Flask development server
+    app.run(
+        host='0.0.0.0',  # Listen on all network interfaces
+        port=port,
+        debug=False  # Set to False for production
+    )
+
+# =============================================================================
 # END OF FILE
 # =============================================================================
