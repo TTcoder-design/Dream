@@ -135,6 +135,18 @@ VIDEOS = {
         "duration": "0:46:00",
         "category": "drama",
         "tags": ["drama", "romance", "adventure"]
+    },
+    "7": {
+        "id": "7",
+        "title": "Hello World",
+        "description": "Hello World anime plot centers on shy high schooler Naomi Katagaki in futuristic Kyoto, whose world gets flipped when an older version of himself time-travels from 10 years in the future to alter a tragic event: preventing his classmate and love interest, Ruri Ichigyou, from being struck by lightning and falling into a coma",
+        "thumbnail": "/static/images/hello-world.jpg",
+        "video_url": "/stream/7",
+        "original_url": "https://vod3.cf.dmcdn.net/sec2(O7CILuc9_Uo6jGYjGahuBVdxiIRFPBx5OdRBzU2GGqaHkUImHEqtdK_MqwqOk3MdaNqKp4ZAdxUOZDMxK9ytmWtToyGzZtJiUJxwuO9tpkbErZxFfRwdAfYIwpWgxCUqPJWWQi1K_IADq9gt_PSQiv5CynVLMGx6qnQqU4bOe9N0sJpKae1hEGvVZH-JsygO)/video/540/481/520184045_mp4_h264_aac_hq_3.m3u8",
+        "duration": "1:38:00",
+        "category": "romance",
+        "tags": ["romance", "scifi"],
+        "language": "hindi"
     }
 }
 
